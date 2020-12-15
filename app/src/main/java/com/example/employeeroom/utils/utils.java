@@ -22,6 +22,7 @@ public class utils {
     }
 
     public static void PrintList(List<Employee> dataList) {
+        Log.d("PrintList", " "+ new Throwable().getStackTrace()[0].getMethodName() +"  "+ Thread.currentThread().getName()+" "+System.currentTimeMillis());
         if (dataList.size() > 0) {
             for (Employee elem : dataList) {
                 Log.i("PrintList", elem.toString());
