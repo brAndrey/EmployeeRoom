@@ -5,104 +5,86 @@ import android.util.Log;
 import com.example.employeeroom.db.App;
 import com.example.employeeroom.db.AppDataBase;
 import com.example.employeeroom.db.model.Employee;
-import com.example.employeeroom.utils.utils;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class Repository {
+
+    private Object Future;
 
     public void insert (Employee employee){
 
     }
 
-    public void InsertRX(Employee employee) {
-
-        // https://stackoverflow.com/questions/46482423/android-room-asynctask
-
-//        executor.execute(() -> {
-//            appDataBase.employeeDao().insert(employee);
-//        });
-
-        AppDataBase appDataBase = App.getInstance().getDatabase();
-
-        Executor    executor = Executors.newSingleThreadExecutor();
-
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-                Log.d(this.getClass().getSimpleName(), " "+ new Throwable().getStackTrace()[0].getMethodName() +"  "+ Thread.currentThread().getName()+" "+System.currentTimeMillis());
-                appDataBase.employeeDao().insert(employee);
-            }
-        });
-    }
 
 
-    // \/ не работает т.к. в потоке UI
-    public void getCoupons() {
+    class CallableInsertEmployee implements Callable<Long>{
+        private final Employee employee;
 
-        Log.d(this.getClass().getSimpleName(), " "+ new Throwable().getStackTrace()[0].getMethodName() +"  "+ Thread.currentThread().getName()+" "+System.currentTimeMillis());
-
-        try {
-            Observable.just( longAction())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<List<Employee>>() {
-                        @Override
-                        public void accept(final List<Employee> employees) throws Exception {
-                            Log.d(this.getClass().getSimpleName(), " "+ new Throwable().getStackTrace()[0].getMethodName() +"  "+ Thread.currentThread().getName()+" "+System.currentTimeMillis());
-                            utils.PrintList(employees);
-                        }
-                    });
-        } catch (IOException e) {
-            e.printStackTrace();
+        public CallableInsertEmployee(Employee employee){
+            this.employee=employee;
         }
-    }
-
-
-    private List<Employee> longAction() throws IOException {
-
-        Log.d(this.getClass().getSimpleName(), " "+ new Throwable().getStackTrace()[0].getMethodName() +"  "+ Thread.currentThread().getName()+" "+System.currentTimeMillis());
-        AppDataBase appDataBase = App.getInstance().getDatabase();
-
-        return appDataBase.employeeDao().getAll();
-    }
-//  /\ не работает т.к. в потоке UI
-
-    class CallableLongAction implements Callable<List<Employee> >{
 
         @Override
-        public List<Employee> call() throws Exception {
-            Log.d(this.getClass().getSimpleName(), " "+ new Throwable().getStackTrace()[0].getMethodName() +"  "+ Thread.currentThread().getName()+" "+System.currentTimeMillis());
+        public Long call() throws Exception {
             AppDataBase appDataBase = App.getInstance().getDatabase();
-            return appDataBase.employeeDao().getAll();
+            return appDataBase.employeeDao().insertId(employee);
         }
     }
+    public Long insertFromCallable(Employee employee ) {
 
-    public void getFromCallable( ) {
+        final List<Long> resultId = new ArrayList<>();
+        long[] longs = new long[1];
 
-        Observable.fromCallable( new CallableLongAction())
+        //Observable.fromCallable(new Callable<File>() { @Override public File call() throws Exception { return downloadFileFromNetwork(); } }
+
+      Observable.fromCallable( new CallableInsertEmployee(employee))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Employee>>() {
+                .subscribe(
+                        new Consumer<Long>() {
                     @Override
-                    public void accept(List<Employee> employees) throws Exception {
-                        utils.PrintList(employees);
-                    }
-                });
+                    public void accept(Long aLong) throws Exception {
+                        Log.d(this.getClass().getSimpleName(), " " + new Throwable().getStackTrace()[0].getMethodName() + "  " + Thread.currentThread().getName() + " " + System.currentTimeMillis());
+                        resultId.add(aLong);
+                        longs[0] = aLong;
+
+                        Log.d("insertFromCallable "+this.getClass().getSimpleName(), "aLong " + aLong);
+                    } });
+
+
+        Log.d(this.getClass().getSimpleName(), " "+ new Throwable().getStackTrace()[0].getMethodName() +"  "+ Thread.currentThread().getName()+" "+System.currentTimeMillis());
+        Log.d(this.getClass().getSimpleName(), "longs[0] "+longs[0]);
+
+        return  longs[0];
     }
+
+    public Observable insertFromCallableOBS(Employee employee ) {
+
+        final List<Long> resultId = new ArrayList<>();
+
+     return   Observable.fromCallable( new CallableInsertEmployee(employee))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+
+    }
+
+
+
+// Observable.fromCallable(() -> { sharedPreferences.edit() .putString(DB_COMPANY, LoganSquare.serialize( CompanyDBTransformation.get(user.getCompany()) )).apply();
+// return user; })
+//            .onErrorResumeNext( throwable -> Observable.error(new CompanySerializationException(throwable)) );
+
 
 }

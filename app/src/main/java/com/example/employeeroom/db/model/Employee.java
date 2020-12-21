@@ -46,7 +46,7 @@ public class Employee {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-
+        sb.append("\n Employee");
         sb.append("\n id:" + this.id);
         sb.append("\n name:" + this.name);
         sb.append("\n salary:" + this.salary);
