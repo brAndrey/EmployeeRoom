@@ -1,6 +1,9 @@
 package com.example.employeeroom.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +19,8 @@ import com.example.employeeroom.repo.RepositoryGet;
 import com.example.employeeroom.repo.RepositoryInUI;
 import com.example.employeeroom.utils.utils;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -24,13 +29,27 @@ import io.reactivex.functions.Consumer;
 public class MainActivity extends AppCompatActivity {
 
     Repository repository;
-
+private MainActivityViewModel mainActivityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         repository = new Repository();
+
+        mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+
+        // liveData на employee
+        mainActivityViewModel.getAllWords().observe(this, new Observer<List<Employee>>() {
+            @Override
+            public void onChanged(List<Employee> employees) {
+                utils.PrintList(employees);
+            }
+        });
+
+        // liveData на car
+        mainActivityViewModel.getAllCar().observe(this,cars -> utils.PrintCar(cars));
+
     }
 
     public void onInsertProcess(View view) {
@@ -40,22 +59,7 @@ public class MainActivity extends AppCompatActivity {
         Employee employee = utils.newEmploe();
         Car car = utils.newCar();
 
-        try {
-            Disposable taskObservable = Observable
-                    .just(repository.insertFromCallable(employee))
-                    //.takeWhile(aLong -> aLong!=0)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> {
-//                    car.setEmployeeId(aLong);
-                                Log.e(this.getClass().getSimpleName(), "Disposable aLong " + aLong);
-                                //Log.e(this.getClass().getSimpleName(), car.toString());
-                            }                    );
-            //repository.insertFromCallable(employee));
-            //  car.setEmployeeId(employee);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         try {
             repository.insertFromCallableOBS(employee).subscribe(

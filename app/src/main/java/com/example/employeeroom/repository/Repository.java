@@ -41,6 +41,21 @@ public class Repository {
             return appDataBase.employeeDao().insertId(employee);
         }
     }
+
+    //  \/ не работает, id не вывозвращает
+    private void insertE(Employee employee){
+        try {
+            Disposable taskObservable = Observable
+                    .just(insertFromCallable(employee))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aLong -> {
+                        Log.e(this.getClass().getSimpleName(), "Disposable aLong " + aLong);
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public Long insertFromCallable(Employee employee ) {
 
         final List<Long> resultId = new ArrayList<>();
@@ -69,9 +84,9 @@ public class Repository {
         return  longs[0];
     }
 
-    public Observable insertFromCallableOBS(Employee employee ) {
+    //  /\ не работает, id не вывозвращает
 
-        final List<Long> resultId = new ArrayList<>();
+    public Observable insertFromCallableOBS(Employee employee ) {
 
      return   Observable.fromCallable( new CallableInsertEmployee(employee))
                 .subscribeOn(Schedulers.io())
