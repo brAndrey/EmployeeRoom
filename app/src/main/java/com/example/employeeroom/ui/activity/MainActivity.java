@@ -25,10 +25,13 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
     Repository repository;
+
 private MainActivityViewModel mainActivityViewModel;
 
     @Override
@@ -39,16 +42,16 @@ private MainActivityViewModel mainActivityViewModel;
 
         mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
-        // liveData на employee
-        mainActivityViewModel.getAllWords().observe(this, new Observer<List<Employee>>() {
-            @Override
-            public void onChanged(List<Employee> employees) {
-                utils.PrintList(employees);
-            }
-        });
-
-        // liveData на car
-        mainActivityViewModel.getAllCar().observe(this,cars -> utils.PrintCar(cars));
+//        // liveData на employee
+//        mainActivityViewModel.getAllWords().observe(this, new Observer<List<Employee>>() {
+//            @Override
+//            public void onChanged(List<Employee> employees) {
+//                utils.PrintList(employees);
+//            }
+//        });
+//
+//        // liveData на car
+//        mainActivityViewModel.getAllCar().observe(this,cars -> utils.PrintCar(cars));
 
     }
 
@@ -58,8 +61,6 @@ private MainActivityViewModel mainActivityViewModel;
 
         Employee employee = utils.newEmploe();
         Car car = utils.newCar();
-
-
 
         try {
             repository.insertFromCallableOBS(employee).subscribe(
@@ -73,6 +74,19 @@ private MainActivityViewModel mainActivityViewModel;
                             car.setEmployeeId(aLong);
                             repositoryExecutor.InsertExecutor(car);
                         }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            repository.getUserName(employee.getName()+"1")
+                     .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+
+                    .subscribe(employee1 -> {
+                        Log.e("getUserName", "Flowable");
+                    Log.e("getUserName",employee1.toString());
                     });
         } catch (Exception e) {
             e.printStackTrace();

@@ -28,9 +28,14 @@ public interface EmployeeDao {
 //    @Query("SELECT * FROM employee")
 //    Flowable<List<Employee>> getCoupons();
 
-
     @Query("SELECT *FROM employee WHERE id= :id")
     Employee getById(long id);
+
+    @Query("SELECT *FROM employee WHERE name= :name")
+    Observable<Employee> getByName (String name);
+
+    @Query("SELECT *FROM employee WHERE name= :name")
+    Flowable<Employee> getByNameF (String name);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Employee employee);
