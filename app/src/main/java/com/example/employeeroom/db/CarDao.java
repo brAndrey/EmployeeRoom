@@ -29,4 +29,7 @@ public interface CarDao {
     @Delete
     void delete(Car car);
 
+    @Query("DELETE FROM Car")
+    void deleteCars();
+
 }

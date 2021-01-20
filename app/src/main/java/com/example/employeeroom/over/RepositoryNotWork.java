@@ -5,7 +5,11 @@ import android.util.Log;
 import com.example.employeeroom.db.App;
 import com.example.employeeroom.db.AppDataBase;
 import com.example.employeeroom.db.model.Employee;
+import com.example.employeeroom.repository.Repository;
 import com.example.employeeroom.utils.utils;
+
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,5 +54,39 @@ public class RepositoryNotWork {
         return appDataBase.employeeDao().getAll();
     }
 //  /\ не работает т.к. в потоке UI
+
+    public void getEmployeeThroughName(Employee employee) {
+        Repository repository = new Repository();
+        try {
+            repository.getUserNameList(employee.getName())
+                    //.repeat(1)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<List<Employee>>() {
+                        @Override
+                        public void onSubscribe(Subscription s) {
+                            Log.e("Flowable ", " onSubscribe " + employee.getName());
+                        }
+
+                        @Override
+                        public void onNext(List<Employee> employees) {
+                            Log.e("Flowable ", " onNext " + employee.getName());
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            Log.e("Flowable ", " onError " + employee.getName());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            Log.e("Flowable ", " onComplete " + employee.getName());
+                        }
+                    });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

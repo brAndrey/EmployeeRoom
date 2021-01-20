@@ -29,15 +29,15 @@ public class RepositoryGet {
 
         @Override
         public List<Employee> call() throws Exception {
-            Log.d(this.getClass().getSimpleName(), " "+ new Throwable().getStackTrace()[0].getMethodName() +"  "+ Thread.currentThread().getName()+" "+System.currentTimeMillis());
+            Log.d(this.getClass().getSimpleName(), " " + new Throwable().getStackTrace()[0].getMethodName() + "  " + Thread.currentThread().getName() + " " + System.currentTimeMillis());
             AppDataBase appDataBase = App.getInstance().getDatabase();
             return appDataBase.employeeDao().getAll();
         }
     }
 
-    public void getFromCallable( ) {
+    public void getFromCallable() {
 
-        Observable.fromCallable( new CallableLongAction())
+        Observable.fromCallable(new CallableLongAction())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Employee>>() {
@@ -47,21 +47,22 @@ public class RepositoryGet {
                     }
                 });
     }
-//**************************************************************************
 
-    class CallableLongActionCar implements Callable<List<Car> >{
+    //**************************************************************************
+
+    class CallableLongActionCar implements Callable<List<Car>> {
 
         @Override
         public List<Car> call() throws Exception {
-            Log.d(this.getClass().getSimpleName(), " "+ new Throwable().getStackTrace()[0].getMethodName() +"  "+ Thread.currentThread().getName()+" "+System.currentTimeMillis());
+            Log.d(this.getClass().getSimpleName(), " " + new Throwable().getStackTrace()[0].getMethodName() + "  " + Thread.currentThread().getName() + " " + System.currentTimeMillis());
             AppDataBase appDataBase = App.getInstance().getDatabase();
             return appDataBase.carDao().getAll();
         }
     }
 
-    public void getFromCallableCar( ) {
+    public void getFromCallableCar() {
 
-        Observable.fromCallable( new CallableLongActionCar())
+        Observable.fromCallable(new CallableLongActionCar())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Car>>() {
@@ -71,9 +72,6 @@ public class RepositoryGet {
                     }
                 });
     }
-
     //**************************************************************************
 
-
-
-    }
+}

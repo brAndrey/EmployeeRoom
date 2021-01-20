@@ -27,6 +27,7 @@ public class Repository {
 
     }
 
+    //********************************************************************
 
     class CallableInsertEmployee implements Callable<Long>{
         private final Employee employee;
@@ -48,11 +49,33 @@ public class Repository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    //********************************************************************
+
+
     public Flowable<Employee> getUserName(String name) {
         AppDataBase appDataBase = App.getInstance().getDatabase();
         return appDataBase.employeeDao().getByNameF(name);
     }
 
+    public Observable<Employee> getUserNameObs(String name) {
+        AppDataBase appDataBase = App.getInstance().getDatabase();
+        return appDataBase.employeeDao().getByName(name);
+    }
+
+    public Flowable<List<Employee>> getUserNameList(String name) {
+        AppDataBase appDataBase = App.getInstance().getDatabase();
+        return appDataBase.employeeDao().getByNameFList(name);
+    }
+    public Observable<List<Employee>> getUserNameObsList(String name) {
+        AppDataBase appDataBase = App.getInstance().getDatabase();
+        return appDataBase.employeeDao().getByNameList(name);
+    }
+    //********************************************************************
+
+    public void ClearBase(){
+        AppDataBase appDataBase = App.getInstance().getDatabase();
+        appDataBase.employeeDao().deleteEmployees();
+    }
 
 
 

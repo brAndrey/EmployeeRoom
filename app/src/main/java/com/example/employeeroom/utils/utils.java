@@ -15,7 +15,7 @@ public class utils {
         String time = String.valueOf(System.currentTimeMillis());
 
         Employee employee = new Employee(
-                "John_" + time.substring(time.length() - 3)
+                "John_" + time.substring(time.length() - 1)
                 , 10000
         );
 

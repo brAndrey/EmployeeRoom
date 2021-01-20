@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">EmployeeRoom</string>
+    <string name="action_settings">Clear base</string>
 </resources>

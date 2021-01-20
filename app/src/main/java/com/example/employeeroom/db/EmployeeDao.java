@@ -37,6 +37,13 @@ public interface EmployeeDao {
     @Query("SELECT *FROM employee WHERE name= :name")
     Flowable<Employee> getByNameF (String name);
 
+    @Query("SELECT *FROM employee WHERE name= :name")
+    Observable<List<Employee>> getByNameList (String name);
+
+    @Query("SELECT *FROM employee WHERE name= :name")
+    Flowable<List<Employee>> getByNameFList (String name);
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Employee employee);
 
@@ -48,5 +55,8 @@ public interface EmployeeDao {
 
     @Delete
     void delete(Employee employee);
+
+    @Query("DELETE FROM Employee")
+    void deleteEmployees();
 
 }
