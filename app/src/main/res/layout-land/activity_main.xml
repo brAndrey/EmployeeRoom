@@ -51,10 +51,9 @@
     <androidx.recyclerview.widget.RecyclerView
 
         android:id="@+id/recyclerViewEmployee"
-        android:layout_width="407dp"
-        android:layout_height="340dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="328dp"
+        android:layout_height="323dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
@@ -67,10 +66,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCar"
-        android:layout_width="409dp"
-        android:layout_height="295dp"
+        android:layout_width="329dp"
+        android:layout_height="321dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.99"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewEmployee" />
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

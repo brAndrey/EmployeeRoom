@@ -5,7 +5,11 @@ import android.util.Log;
 import com.example.employeeroom.db.model.Car;
 import com.example.employeeroom.db.model.Employee;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class utils {
 
@@ -18,6 +22,10 @@ public class utils {
                 "John_" + time.substring(time.length() - 1)
                 , 10000
         );
+
+        employee.setTimeEntryNumber( (int) System.currentTimeMillis());
+        employee.setTimeEntryNUMERIC(System.currentTimeMillis());
+        employee.setTimeEntrySt(time);
 
         return employee;
     }
@@ -48,5 +56,25 @@ public class utils {
                 Log.i("PrintList", elem.toString());
             }
         }
+    }
+
+    public static String TimeFormat() {
+        long yourmilliseconds = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+        Date resultdate = new Date(yourmilliseconds);
+        return sdf.format(resultdate);
+    }
+
+    public static long ReadStringToDataFormat(String dataInt) {
+        //Log.e("WriteDataFormat","int - " + dataInt);
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm", Locale.getDefault());
+            Date resultdate = sdf.parse(dataInt, new ParsePosition(0));
+            //  Log.e("WriteDataFormat"," "+resultdate.getTime());
+            return resultdate.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

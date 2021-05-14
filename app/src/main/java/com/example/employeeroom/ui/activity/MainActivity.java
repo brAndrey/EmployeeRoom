@@ -3,6 +3,8 @@ package com.example.employeeroom.ui.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +36,25 @@ private MainActivityViewModel mainActivityViewModel;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        RecyclerView recyclerViewEmploy = findViewById(R.id.recyclerViewEmployee);
+
+        LinearLayoutManager linearLayoutManagerE = new LinearLayoutManager(this);
+        recyclerViewEmploy.setLayoutManager(linearLayoutManagerE);
+
+        EmployeeAdapter employeeAdapter = new EmployeeAdapter();
+        recyclerViewEmploy.setAdapter(employeeAdapter);
+
+        RecyclerView recyclerViewCar = findViewById(R.id.recyclerViewCar);
+        LinearLayoutManager linearLayoutManagerC = new LinearLayoutManager(this);
+        recyclerViewCar.setLayoutManager(linearLayoutManagerC);
+
+        CarAdapter carAdapter = new CarAdapter();
+        recyclerViewCar.setAdapter(carAdapter);
+
+
+
+//процедура наполнения
         repository = new Repository();
 
         mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
@@ -42,12 +63,22 @@ private MainActivityViewModel mainActivityViewModel;
         mainActivityViewModel.getAllWords().observe(this, new Observer<List<Employee>>() {
             @Override
             public void onChanged(List<Employee> employees) {
-               utils.PrintList(employees);
+              try {
+                  employeeAdapter.setData(employees);
+                  employeeAdapter.notifyDataSetChanged();
+              } catch (Exception e) {
+                  e.printStackTrace();
+              }
+
+                utils.PrintList(employees);
             }
         });
 
         // liveData на car
-        mainActivityViewModel.getAllCar().observe(this,cars -> utils.PrintCar(cars));
+        mainActivityViewModel.getAllCar().observe(this,cars -> {
+            carAdapter.setData(cars);
+            carAdapter.notifyDataSetChanged();
+            utils.PrintCar(cars);});
 
     }
 

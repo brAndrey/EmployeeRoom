@@ -1,6 +1,7 @@
 package com.example.employeeroom.db.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -12,6 +13,12 @@ public class Employee {
     private String name;
 
     private int salary;
+
+    private String timeEntrySt;
+
+    private int timeEntryNumber;
+
+    private long timeEntryNUMERIC;
 
     public Employee(String name, int salary){
 
@@ -43,6 +50,22 @@ public class Employee {
         this.salary = salary;
     }
 
+    public String getTimeEntrySt() { return timeEntrySt;}
+
+    public void setTimeEntrySt(String timeEntrySt) { this.timeEntrySt = timeEntrySt;}
+
+    public int getTimeEntryNumber() {return timeEntryNumber;}
+
+    public void setTimeEntryNumber(int timeEntryNumber) {this.timeEntryNumber = timeEntryNumber;}
+
+    public long getTimeEntryNUMERIC() {
+        return timeEntryNUMERIC;
+    }
+
+    public void setTimeEntryNUMERIC(long timeEntryNUMERIC) {
+        this.timeEntryNUMERIC = timeEntryNUMERIC;
+    }
+
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
@@ -50,6 +73,10 @@ public class Employee {
         sb.append("\n id:" + this.id);
         sb.append("\n name:" + this.name);
         sb.append("\n salary:" + this.salary);
+        sb.append("\n timeEntrySt  :" + this.timeEntrySt);
+        sb.append("\n timeEntryNumber :" + this.timeEntryNumber);
+        sb.append("\n timeEntryNUMERIC:" + this.timeEntryNUMERIC);
+
         sb.append("\n *****************");
         return sb.toString();
     }

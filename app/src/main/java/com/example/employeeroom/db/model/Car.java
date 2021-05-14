@@ -24,6 +24,30 @@ public class Car {
 
     public int yaer;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public int getYaer() {
+        return yaer;
+    }
+
+    public void setYaer(int yaer) {
+        this.yaer = yaer;
+    }
+
     @ColumnInfo(name = "employee_id")
     public long employeeId;
 
